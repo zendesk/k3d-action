@@ -29,4 +29,4 @@ jobs:
           kubectl config use-context k3d-test-cluster-1
           kubectl get nodes -o wide
       - name: Network
-        run: docker network inspect k3d-action-bridge-network
+        run: docker network inspect k3d-test-cluster-1
