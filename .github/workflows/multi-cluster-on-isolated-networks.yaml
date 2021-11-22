@@ -13,8 +13,6 @@ jobs:
         name: "Create 1st k3d Cluster in 172.20.0.0/24"
         with:
           cluster-name: "test-cluster-1"
-          network: "nw01"
-          subnet-CIDR: "172.20.0.0/24"
           args: >-
             -p "80:80@agent:0:direct"
             -p "443:443@agent:0:direct"
@@ -22,14 +20,12 @@ jobs:
             --agents 3
             --no-lb
             --k3s-arg "--no-deploy=traefik,servicelb,metrics-server@server:*"
-
+            --network nw01
       - uses: ./
         id: test-cluster-2
         name: "Create 1nd k3d Cluster in 172.20.1.0/24"
         with:
           cluster-name: "test-cluster-2"
-          network: "nw02"
-          subnet-CIDR: "172.20.1.0/24"
           args: >-
             -p "81:80@agent:0:direct"
             -p "444:443@agent:0:direct"
@@ -37,7 +33,7 @@ jobs:
             --agents 3
             --no-lb
             --k3s-arg "--no-deploy=traefik,servicelb,metrics-server@server:*"
-
+            --network nw02
       - name: Cluster info
         run: |
           echo test-cluster-1: ${{ steps.test-cluster-1.outputs.network }} ${{ steps.test-cluster-1.outputs.subnet-CIDR }}
