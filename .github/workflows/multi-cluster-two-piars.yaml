@@ -33,6 +33,7 @@ jobs:
         id: test-cluster-2-b
         name: "Create 2nd k3d Cluster in 172.19.0.0/24"
         with:
+          cluster-name: "test-cluster-2-b"
           args: --config=.github/workflows/assets/4.yaml
 
       - name: Cluster info
