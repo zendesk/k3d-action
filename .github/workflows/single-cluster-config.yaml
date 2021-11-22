@@ -18,8 +18,6 @@ jobs:
             --config=.github/workflows/assets/1.yaml
       - name: Cluster info
         run: |
-          echo ${{ steps.single-cluster.outputs.network }} ${{ steps.single-cluster.outputs.subnet-CIDR }}
-          echo
           kubectl cluster-info --context k3d-test-cluster-1
       - name: Nodes
         run: |

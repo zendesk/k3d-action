@@ -22,8 +22,6 @@ jobs:
             --k3s-arg "--no-deploy=traefik,servicelb,metrics-server@server:*"
       - name: Cluster info
         run: |
-          echo ${{ steps.single-cluster.outputs.network }} ${{ steps.single-cluster.outputs.subnet-CIDR }}
-          echo
           kubectl cluster-info --context k3d-test-cluster-1
       - name: Nodes
         run: |
