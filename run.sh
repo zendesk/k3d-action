@@ -76,37 +76,6 @@ deploy(){
       panic "CLUSTER_NAME must be set"
     fi
 
-    existing_network=$(docker network list | awk '   {print $2 }' | grep -w "^$network$" || echo $NOT_FOUND)
-
-    if [[ ($network == "$DEFAULT_NETWORK") && ($subnet != "$DEFAULT_SUBNET") ]]
-    then
-      panic "You can't specify custom subnet for default network."
-    fi
-
-    if [[ ($network != "$DEFAULT_NETWORK") && ($subnet == "$DEFAULT_SUBNET") ]]
-    then
-      if [[ "$existing_network" == "$NOT_FOUND" ]]
-      then
-        panic "Subnet CIDR must be specified for custom network"
-      fi
-    fi
-
-    echo
-
-    # create network if doesn't exists
-    if [[ "$existing_network" == "$NOT_FOUND" ]]
-    then
-      echo -e "${YELLOW}create new network ${CYAN}$network $subnet ${NC}"
-      docker network create --driver=bridge --subnet="$subnet" "$network"
-    else
-      echo -e "${YELLOW}attaching nodes to existing ${CYAN}$network ${NC}"
-      subnet=$(docker network inspect "$network" -f '{{(index .IPAM.Config 0).Subnet}}')
-    fi
-
-    # Setup GitHub Actions outputs
-    echo "::set-output name=network::$network"
-    echo "::set-output name=subnet-CIDR::$subnet"
-
     echo -e "${YELLOW}Downloading ${CYAN}k3d@${K3D_VERSION} ${NC}see: ${K3D_URL}"
     curl --silent --fail ${K3D_URL} | TAG=${K3D_VERSION} bash
 
