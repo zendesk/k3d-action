@@ -26,10 +26,6 @@ RED=
 NC=
 K3D_URL=https://raw.githubusercontent.com/rancher/k3d/main/install.sh
 K3D_VERSION=v5.1.0
-DEFAULT_NETWORK=k3d-action-bridge-network
-DEFAULT_SUBNET=172.16.0.0/24
-NOT_FOUND=k3d-not-found-network
-DEFAULT_REGISTRY_PORT=5000
 
 #######################
 #
@@ -48,12 +44,6 @@ usage(){
                         CLUSTER_NAME (Required) k3d cluster name.
 
                         ARGS (Optional) k3d arguments.
-
-                        NETWORK (Optional) If not set than default k3d-action-bridge-network is created
-                                               and all clusters share that network.
-
-                        SUBNET_CIDR (Optional) If not set than default 172.16.0.0/24 is used. Variable requires
-                                              NETWORK to be set.
 EOF
 }
 
@@ -66,11 +56,6 @@ panic() {
 deploy(){
     local name=${CLUSTER_NAME}
     local arguments=${ARGS:-}
-    local network=${NETWORK:-$DEFAULT_NETWORK}
-    local subnet=${SUBNET_CIDR:-$DEFAULT_SUBNET}
-    local registry=${USE_DEFAULT_REGISTRY:-}
-    local registryPort=${REGISTRY_PORT:-$DEFAULT_REGISTRY_PORT}
-    local registryArg
 
     if [[ -z "${CLUSTER_NAME}" ]]; then
       panic "CLUSTER_NAME must be set"
@@ -80,7 +65,7 @@ deploy(){
     curl --silent --fail ${K3D_URL} | TAG=${K3D_VERSION} bash
 
     echo -e "\existing_network${YELLOW}Deploy cluster ${CYAN}$name ${NC}"
-    eval "k3d cluster create $name --wait $arguments --network $network $registryArg"
+    eval "k3d cluster create $name --wait $arguments"
     wait_for_nodes
 }
 
